@@ -11,19 +11,19 @@ func main() {
 	keyword := os.Args[1]
 	files := os.Args[2:]
 	for _, file := range files {
-		readFile(file, keyword)
+		readFileWithKeyword(file, keyword)
 	}
 }
 
-func readFile(filePath string, keyword string) {
+func readFileWithKeyword(filePath string, keyword string) {
 	data, err := os.Open(filePath)
-	isPossibleToOpen(err)
+	isFilePossibleToOpen(err)
 	defer data.Close()
 
 	findKeywordContainedLine(data, keyword)
 }
 
-func isPossibleToOpen(err error) {
+func isFilePossibleToOpen(err error) {
 	if err != nil {
 		panic("cat: cannot open file")
 	}
