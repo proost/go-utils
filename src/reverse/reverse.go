@@ -2,9 +2,9 @@ package main
 
 import (
 	"bufio"
-	"container/list"
 	"fmt"
 	"os"
+	"sort"
 )
 
 func main() {
@@ -28,13 +28,14 @@ func main() {
 	}
 	defer outputFile.Close()
 
-	reversedLines := reverseLines(inputFile)
+	lines := parseFile(inputFile)
+	sort.Sort(sort.Reverse(sort.StringSlice(lines)))
 	if outputFile == nil {
-		for _, line := range reversedLines {
+		for _, line := range lines {
 			println(line)
 		}
 	} else {
-		writeFile(outputFile, reversedLines)
+		writeFile(outputFile, lines)
 	}
 }
 
@@ -52,22 +53,15 @@ func parseInput() (*string, *string) {
 	}
 }
 
-func reverseLines(file *os.File) []string {
+func parseFile(file *os.File) []string {
+	result := make([]string, 0)
+
 	scanner := bufio.NewScanner(file)
-
-	stack := list.New()
 	for scanner.Scan() {
-		line := scanner.Text()
-		stack.PushBack(line)
+		result = append(result, scanner.Text())
 	}
 
-	reversedStrings := make([]string, 0)
-	for e := stack.Back(); e != nil; e = e.Prev() {
-		line := e.Value.(string)
-		reversedStrings = append(reversedStrings, line)
-	}
-
-	return reversedStrings
+	return result
 }
 
 func writeFile(file *os.File, lines []string) {
